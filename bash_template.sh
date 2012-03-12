@@ -14,4 +14,4 @@ args=("$@")
 argument1=${args[0]}
 argument2=${args[1]}
 
-# Use getopts to parse cli flags
+# Use "getopt" to parse cli flags, not "getopts"
