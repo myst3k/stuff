@@ -11,7 +11,7 @@ yum_install_epel() {
 }
 
 yum_install_tools() {
-	yum -y install open-vm-tools htop mutt rng-tools yum-cron chrony xorg-x11-xauth yum-utils wireshark
+	yum -y install open-vm-tools htop mutt rng-tools yum-cron chrony xorg-x11-xauth yum-utils wireshark man
 }
 
 yum_install_fish() {
@@ -54,16 +54,16 @@ yum_cron_setup() {
 	sed -i "s/CHECK_ONLY=no/CHECK_ONLY=yes/" /etc/sysconfig/yum-cron
 	sed -i "s/CHECK_FIRST=no/CHECK_FIRST=yes/" /etc/sysconfig/yum-cron
 	sed -i "s/DOWNLOAD_ONLY=no/DOWNLOAD_ONLY=yes/" /etc/sysconfig/yum-cron
-  chkconfig yum-cron on
-  service yum-cron start
+	chkconfig yum-cron on
+	service yum-cron start
 }
 
 main() {
-  echo "Starting Dev Box Conversion Script..."
-  yum_install_epel
-  yum_install_tools
-  yum_install_fish
-  yum_update
+	echo "Starting Dev Box Conversion Script..."
+	yum_install_epel
+	yum_install_tools
+	yum_install_fish
+	yum_update
 	rngd_setup
 	yum_cron_setup
 	disable_ipv6
