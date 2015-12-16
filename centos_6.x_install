@@ -58,6 +58,11 @@ yum_cron_setup() {
 	service yum-cron start
 }
 
+update_sudoers() {
+	echo "hello world"
+	sed -i "s/^#\s*\(%wheel\s*ALL=(ALL)\s*ALL\)/\1/" /etc/sudoers
+}
+
 main() {
 	echo "Starting Dev Box Conversion Script..."
 	yum_install_epel
@@ -70,8 +75,11 @@ main() {
 	disable_ipv6
 	disable_firewalls
 	disable_selinux
+	update_sudoers
 	echo "Dev Box Conversion Script Complete..."
-	echo "Please reboot system for changes to take effect!"
+	echo "Add user with the command \"useradd -m -G wheel -s /usr/bin/fish -d /home/foo foo\""
+	echo ""
+	echo "Please restart your system for the full changes to take effect!"
 }
 
 main
