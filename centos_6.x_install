@@ -104,6 +104,7 @@ update_sudoers() {
 }
 
 ec2_main() {
+        echo "Running EC2 Scripts..."
         yum_install_epel
         yum_install_tools
         yum_install_fish
@@ -115,7 +116,7 @@ ec2_main() {
 }
 
 non_ec2_main() {
-        echo "I am not in EC2"
+        echo "Running NON EC2 Scripts..."
         disable_ipv6
         yum_install_epel
         yum_install_tools
