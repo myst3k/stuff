@@ -32,6 +32,8 @@ disable_firewalls() {
 
 disable_ipv6() {
 	echo "Disabling IPv6..."
+	echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
+	echo 1 > /proc/sys/net/ipv6/conf/default/disable_ipv6
 	cat <<EOT >> /etc/sysctl.conf
 
 ## Disable IPv6
@@ -74,6 +76,7 @@ update_sudoers() {
 
 main() {
 	echo "Starting Dev Box Conversion Script..."
+	disable_ipv6
 	yum_install_epel
 	yum_install_tools
 	yum_install_fish
@@ -81,7 +84,6 @@ main() {
 	rngd_setup
 	chrony_setup
 	yum_cron_setup
-	disable_ipv6
 	disable_firewalls
 	disable_selinux
 	update_sudoers
