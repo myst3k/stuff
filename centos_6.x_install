@@ -4,26 +4,27 @@ set -o nounset -o pipefail -o errexit
 #exec 3>&1 4>&2
 #trap 'exec 2>&4 1>&3' 0 1 2 3
 #exec 1>centos_6.x_install.log 2>&1
+LOG=centos_6.x_install.log
 
 yum_update() {
 	echo "Updating system, please be patient..."
-	yum -y update
+	yum -y update >>$LOG 2>&1
 }
 
 yum_install_epel() {
 	echo "Installing EPEL, please be patient..."
-	yum -y install epel-release
+	yum -y install epel-release >>$LOG 2>&1
 }
 
 yum_install_tools() {
 	echo "Installing tools, please be patient..."
-	yum -y install open-vm-tools htop mutt rng-tools yum-cron chrony xorg-x11-xauth yum-utils wireshark man
+	yum -y install open-vm-tools htop mutt rng-tools yum-cron chrony xorg-x11-xauth yum-utils wireshark man >>$LOG 2>&1
 }
 
 yum_install_fish() {
 	echo "Installing Fish Shell, please be patient..."
-	yum-config-manager --add-repo http://fishshell.com/files/linux/RedHat_RHEL-6/fish.release:2.repo
-	yum -y install fish
+	yum-config-manager --add-repo http://fishshell.com/files/linux/RedHat_RHEL-6/fish.release:2.repo >>$LOG 2>&1
+	yum -y install fish >>$LOG 2>&1
 }
 
 disable_firewalls() {
