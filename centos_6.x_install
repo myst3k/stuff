@@ -6,6 +6,14 @@ set -o nounset -o pipefail -o errexit
 #exec 1>centos_6.x_install.log 2>&1
 LOG=centos_6.x_install.log
 
+if [ -f /sys/hypervisor/uuid ] && [ `head -c 3 /sys/hypervisor/uuid` == ec2 ]; then
+	echo "Determined running in EC2"
+	local EC2=true
+else
+	echo "Determined NOT running in EC2"
+	local EC2=false
+fi
+
 yum_update() {
 	echo "Updating system, please be patient..."
 	yum -y update >>$LOG 2>&1
