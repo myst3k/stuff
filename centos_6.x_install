@@ -3,23 +3,28 @@
 set -o nounset -o pipefail -o errexit
 
 yum_update() {
+	echo "Updating system, please be patient..."
 	yum -y update > /dev/null
 }
 
 yum_install_epel() {
+	echo "Installing EPEL, please be patient..."
 	yum -y install epel-release > /dev/null
 }
 
 yum_install_tools() {
+	echo "Installing tools, please be patient..."
 	yum -y install open-vm-tools htop mutt rng-tools yum-cron chrony xorg-x11-xauth yum-utils wireshark man > /dev/null
 }
 
 yum_install_fish() {
+	echo "Installing Fish Shell, please be patient..."
 	yum-config-manager --add-repo http://fishshell.com/files/linux/RedHat_RHEL-6/fish.release:2.repo > /dev/null
 	yum -y install fish > /dev/null
 }
 
 disable_firewalls() {
+	echo "Disabling firewalls..."
 	service iptables stop
 	service ip6tables stop
 	chkconfig iptables off
@@ -27,30 +32,35 @@ disable_firewalls() {
 }
 
 disable_ipv6() {
+	echo "Disabling IPv6..."
 	cat <<EOT >> /etc/sysctl.conf
 
-## Disable IPV6
+## Disable IPv6
 net.ipv6.conf.all.disable_ipv6 = 1
 net.ipv6.conf.default.disable_ipv6 = 1
 EOT
 }
 
 disable_selinux() {
+	echo "Disabling SELINUX..."
 	sed -i "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config
 }
 
 rngd_setup() {
+	echo "Setting up RNGD..."
 	sed -i "s@EXTRAOPTIONS=\"\"@EXTRAOPTIONS=\"-r /dev/urandom\"@" /etc/sysconfig/rngd
 	chkconfig rngd on
 	service rngd start
 }
 
 chrony_setup() {
+	echo "Setting up Chrony..."
 	chkconfig chronyd on
 	service chronyd start
 }
 
 yum_cron_setup() {
+	echo "Setting up yum-cron..."
 	sed -i "s/CHECK_ONLY=no/CHECK_ONLY=yes/" /etc/sysconfig/yum-cron
 	sed -i "s/CHECK_FIRST=no/CHECK_FIRST=yes/" /etc/sysconfig/yum-cron
 	sed -i "s/DOWNLOAD_ONLY=no/DOWNLOAD_ONLY=yes/" /etc/sysconfig/yum-cron
@@ -59,7 +69,7 @@ yum_cron_setup() {
 }
 
 update_sudoers() {
-	echo "hello world"
+	echo "Updating sudoers to allow wheel group..."
 	sed -i "s/^#\s*\(%wheel\s*ALL=(ALL)\s*ALL\)/\1/" /etc/sudoers
 }
 
