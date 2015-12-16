@@ -1,1 +1,76 @@
 
+#!/usr/bin/env bash
+set -o nounset -o pipefail -o errexit
+
+yum_update() {
+	yum -y update
+}
+
+yum_install_epel() {
+	yum -y install epel-release
+}
+
+yum_install_tools() {
+	yum -y install open-vm-tools htop mutt rng-tools yum-cron chrony xorg-x11-xauth yum-utils wireshark
+}
+
+yum_install_fish() {
+	yum-config-manager --add-repo http://fishshell.com/files/linux/RedHat_RHEL-6/fish.release:2.repo
+	yum -y install fish
+}
+
+disable_firewalls() {
+	service iptables stop
+	service ip6tables stop
+	chkconfig iptables off
+	chkconfig ip6tables off
+}
+
+disable_ipv6() {
+	cat <<EOT >> /etc/sysctl.conf
+
+## Disable IPV6
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+EOT
+}
+
+disable_selinux() {
+	sed -i "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config
+}
+
+rngd_setup() {
+	sed -i "s@EXTRAOPTIONS=\"\"@EXTRAOPTIONS=\"-r /dev/urandom\"@" /etc/sysconfig/rngd
+	chkconfig rngd on
+	service rngd start
+}
+
+chrony_setup() {
+	chkconfig chronyd on
+	service chronyd start
+}
+
+yum_cron_setup() {
+	sed -i "s/CHECK_ONLY=no/CHECK_ONLY=yes/" /etc/sysconfig/yum-cron
+	sed -i "s/CHECK_FIRST=no/CHECK_FIRST=yes/" /etc/sysconfig/yum-cron
+	sed -i "s/DOWNLOAD_ONLY=no/DOWNLOAD_ONLY=yes/" /etc/sysconfig/yum-cron
+  chkconfig yum-cron on
+  service yum-cron start
+}
+
+main() {
+  echo "Starting Dev Box Conversion Script..."
+  yum_install_epel
+  yum_install_tools
+  yum_install_fish
+  yum_update
+	rngd_setup
+	yum_cron_setup
+	disable_ipv6
+	disable_firewalls
+	disable_selinux
+	echo "Dev Box Conversion Script Complete..."
+	echo "Please reboot system for changes to take effect!"
+}
+
+main
