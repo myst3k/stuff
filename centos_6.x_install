@@ -3,20 +3,20 @@
 set -o nounset -o pipefail -o errexit
 
 yum_update() {
-	yum -y update
+	yum -y update > /dev/null
 }
 
 yum_install_epel() {
-	yum -y install epel-release
+	yum -y install epel-release > /dev/null
 }
 
 yum_install_tools() {
-	yum -y install open-vm-tools htop mutt rng-tools yum-cron chrony xorg-x11-xauth yum-utils wireshark man
+	yum -y install open-vm-tools htop mutt rng-tools yum-cron chrony xorg-x11-xauth yum-utils wireshark man > /dev/null
 }
 
 yum_install_fish() {
-	yum-config-manager --add-repo http://fishshell.com/files/linux/RedHat_RHEL-6/fish.release:2.repo
-	yum -y install fish
+	yum-config-manager --add-repo http://fishshell.com/files/linux/RedHat_RHEL-6/fish.release:2.repo > /dev/null
+	yum -y install fish > /dev/null
 }
 
 disable_firewalls() {
