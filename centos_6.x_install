@@ -48,6 +48,11 @@ yum_install_extras() {
         yum -y install libXrender-devel libXtst-devel >>$LOG 2>&1
 }
 
+yum_remove_openjdk() {
+        echo "Removing OpenJDK, please be patient..."
+        yum -y remove *openjdk* >>$LOG 2>&1
+}
+
 disable_firewalls() {
         echo "Disabling firewalls..."
         service iptables stop
@@ -109,6 +114,7 @@ ec2_main() {
         yum_install_tools
         yum_install_fish
         yum_install_extras
+        yum_remove_openjdk
         yum_update
         yum_cron_setup
         disable_firewalls
@@ -122,6 +128,7 @@ non_ec2_main() {
         yum_install_tools
         yum_install_fish
         yum_install_extras
+        yum_remove_openjdk
         yum_update
         rngd_setup
         chrony_setup
